@@ -162,7 +162,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Running Shafim Store Server')
 })
 
 app.listen(port, () => {
