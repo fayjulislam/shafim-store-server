@@ -17,11 +17,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        const database = client.db("store");
-        const storeCollection = database.collection("products");
+        const database = client.db('shafim-store');
+        const storeCollection = database.collection('products');
         const orderCollection = database.collection('order');
         const usersCollection = database.collection('user');
         const reviewCollection = database.collection('review');
+
         // post api
         app.post('/products', async (req, res) => {
             const watch = req.body;
@@ -35,24 +36,28 @@ async function run() {
             const result = await watch.toArray();
             res.send(result);
         });
+
         // review post api
         app.post('/review', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
             res.json(result)
         });
+
         // get review
         app.get('/review', async (req, res) => {
             const review = reviewCollection.find({});
             const result = await review.toArray();
             res.send(result);
         });
+
         // placorder
         app.post('/placeorder', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
             res.json(result)
         });
+
         // Orderplace api
         app.get('/allconfirmorder/:id', async (req, res) => {
             const id = req.params.id;
@@ -60,12 +65,14 @@ async function run() {
             const allorders = await storeCollection.findOne(query);
             res.send(allorders);
         });
+
         // get all user
         app.get('/users', async (req, res) => {
             const cursor = usersCollection.find({});
             const allUser = await cursor.toArray();
             res.json(allUser);
         });
+
         // upsert api 
         app.put('/users', async (req, res) => {
             const user = req.body;
@@ -75,6 +82,7 @@ async function run() {
             const result = await usersCollection.updateOne(filter, update, options);
             res.json(result)
         })
+
         //get my orders
         app.get("/myorders/:email", async (req, res) => {
             const result = await orderCollection.find({
@@ -82,18 +90,21 @@ async function run() {
             }).toArray();
             res.send(result);
         });
+
         // get all product
         app.get('/allproducts', async (req, res) => {
             const product = storeCollection.find({});
             const result = await product.toArray();
             res.send(result);
         });
+
         //get manage orders
         app.get("/manageorders", async (req, res) => {
             const manageorder = orderCollection.find({});
             const getManageOrder = await manageorder.toArray();
             res.json(getManageOrder);
         });
+
         // delete all product 
         app.delete("/deleteallproduct/:id", async (req, res) => {
             const id = req.params.id;
@@ -101,6 +112,7 @@ async function run() {
             const result = await storeCollection.deleteOne(query);
             res.json(result);
         });
+
         // delete all order 
         app.delete("/allorderdelete/:id", async (req, res) => {
             const id = req.params.id;
@@ -108,6 +120,7 @@ async function run() {
             const result = await orderCollection.deleteOne(query);
             res.json(result);
         });
+
         // delete my order 
         app.delete("/orderdelete/:id", async (req, res) => {
             const id = req.params.id;
@@ -115,6 +128,7 @@ async function run() {
             const result = await orderCollection.deleteOne(query);
             res.json(result);
         });
+
         // update order 
         app.put('/placeorders/:id', async (req, res) => {
             const id = req.params.id;
@@ -128,6 +142,7 @@ async function run() {
             const result = await orderCollection.updateOne(filter, statusUpdate, options);
             res.json(result)
         });
+
         //make admin role
         app.put('/users/:id', async (req, res) => {
             const id = req.params.id;
@@ -142,6 +157,7 @@ async function run() {
             const result = await usersCollection.updateOne(filter, roleUpdate, options);
             res.json(result)
         });
+
         //make admin role api
         app.get("/users/:email", async (req, res) => {
             const userEmail = req.params.email;
